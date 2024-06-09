@@ -67,16 +67,16 @@ struct AnkiNote {
 }
 
 fn convert(lt: LuteTerm) -> Option<AnkiNote> {
-    if lt.parent.is_some() && !lt.tags.contains("anki") {
+    if (lt.parent.is_some() || lt.tags.contains("generated")) && !lt.tags.contains("anki") {
         None?;
     }
-    if lt.tags.contains("noanki") || lt.tags.contains("generated") {
+    if lt.tags.contains("noanki") {
         None?;
     }
     if lt.translation.trim().is_empty() {
         None?;
     }
-    let tags: TagList = lt.tags.filter(|tag| tag != "loan" && tag != "anki");
+    let tags: TagList = lt.tags.filter(|tag| tag != "loan" && tag != "anki" && tag != "generated");
     let mut front: String = lt.term.replace('\u{200b}', "");
     if let Some(p) = lt.pronunciation {
         front += &format!("\n\npronunciation: {p}");
